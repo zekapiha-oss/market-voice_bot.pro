@@ -1,0 +1,25 @@
+[project]
+name = "market-voice-bot"
+version = "1.0.0"
+description = "Telegram-бот: мониторит крипто-новости из RSS, переписывает их через LLM (Groq) и публикует в канал."
+requires-python = ">=3.10"
+readme = "README.md"
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.ruff.lint.per-file-ignores]
+# Промпт для LLM — длинный многострочный текст, переносить его по 100 симв. бессмысленно.
+"market_voice_bot/ai_writer.py" = ["E501"]
+
+[tool.black]
+line-length = 100
+target-version = ["py310"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v"

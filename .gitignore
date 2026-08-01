@@ -1,0 +1,23 @@
+# Секреты
+.env
+
+# Файл состояния (data/state.db) НЕ игнорируется — он коммитится обратно в
+# репозиторий самим workflow'ом bot.yml, это и есть персистентность бота
+# между запусками GitHub Actions.
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+.coverage
+htmlcov/
+
+# Виртуальные окружения
+.venv/
+venv/
+
+# IDE
+.vscode/
+.idea/
