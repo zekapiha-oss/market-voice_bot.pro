@@ -1,11 +1,11 @@
-"""Генерация текста поста из сырой новости с помощью Groq (LLM)."""
+"""Генерация текста поста из сырой новости с помощью DeepSeek (LLM)."""
 
 from __future__ import annotations
 
 import logging
 import time
 
-from groq import Groq
+from openai import OpenAI
 
 from .rss_fetcher import NewsEntry
 
@@ -36,10 +36,11 @@ class AIGenerationError(Exception):
 
 
 class AIWriter:
-    """Обёртка над Groq-клиентом для генерации постов из новостей."""
+    """Обёртка над DeepSeek-клиентом для генерации постов из новостей."""
 
     def __init__(self, api_key: str, model: str) -> None:
-        self._client = Groq(api_key=api_key)
+        # Используем OpenAI клиент, так как DeepSeek API совместим с ним
+        self._client = OpenAI(api_key=api_key, base_url="https://api.deepseek.com")
         self._model = model
 
     def generate_post(self, news: NewsEntry) -> str | None:
@@ -47,8 +48,7 @@ class AIWriter:
 
         Возвращает None, если ИИ счёл новость не стоящей публикации (SKIP).
         Бросает AIGenerationError, если после нескольких попыток так и не
-        удалось получить ответ от модели (в этом случае новость стоит
-        обработать заново при следующем запуске, а не считать её "скипнутой").
+        удалось получить ответ от модели.
         """
         raw_text = f"Заголовок: {news.title}\nТекст: {news.summary}"
 
@@ -70,7 +70,7 @@ class AIWriter:
                     return None
 
                 return text
-            except Exception as exc:  # ошибки сети/квоты Groq
+            except Exception as exc:  # ошибки сети/квоты DeepSeek
                 last_error = exc
                 logger.warning(
                     "Ошибка генерации поста (попытка %s/%s): %s",
