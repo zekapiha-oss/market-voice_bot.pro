@@ -25,10 +25,10 @@ class ConfigError(RuntimeError):
 class Settings:
     """Полная конфигурация запуска бота."""
 
-    deepseek_api_key: str
+    groq_api_key: str
     bot_token: str
     channel_id: str
-    deepseek_model: str = DEFAULT_MODEL
+    groq_model: str = DEFAULT_MODEL
     rss_urls: list[str] = field(default_factory=lambda: list(DEFAULT_RSS_URLS))
     db_path: str = DEFAULT_DB_PATH
     max_news_per_run: int = DEFAULT_MAX_NEWS_PER_RUN
@@ -37,7 +37,9 @@ class Settings:
     @classmethod
     def from_env(cls) -> Settings:
         """Собирает настройки из переменных окружения и валидирует обязательные поля."""
-        deepseek_api_key = os.environ.get("DEEPSEEK_API_KEY")
+        deepseek_api_key = os.environ.get("DEEPSEEK_API_KEY") or os.environ.get(
+            "GROQ_API_KEY"
+        )
         bot_token = os.environ.get("BOT_TOKEN")
         channel_id = os.environ.get("CHANNEL_ID")
 
@@ -71,10 +73,11 @@ class Settings:
             raise ConfigError("MAX_NEWS_PER_RUN должен быть целым числом") from exc
 
         return cls(
-            deepseek_api_key=deepseek_api_key,  # type: ignore[arg-type]
+            groq_api_key=deepseek_api_key,  # type: ignore[arg-type]
             bot_token=bot_token,  # type: ignore[arg-type]
             channel_id=channel_id,  # type: ignore[arg-type]
-            deepseek_model=os.environ.get("DEEPSEEK_MODEL", DEFAULT_MODEL),
+            groq_model=os.environ.get("DEEPSEEK_MODEL")
+            or os.environ.get("GROQ_MODEL", DEFAULT_MODEL),
             rss_urls=rss_urls,
             db_path=os.environ.get("DB_PATH", DEFAULT_DB_PATH),
             max_news_per_run=max_news_per_run,
