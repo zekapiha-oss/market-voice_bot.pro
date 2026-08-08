@@ -6,14 +6,13 @@ import logging
 import os
 from dataclasses import dataclass, field
 
-# Обновили дефолтную модель для DeepSeek
 DEFAULT_RSS_URLS = [
     "https://cointelegraph.com/rss",
     "https://www.coindesk.com/arc/outboundfeeds/rss/",
     "https://cryptoslate.com/feed/",
 ]
 
-DEFAULT_MODEL = "deepseek-chat" 
+DEFAULT_MODEL = "deepseek-chat"
 DEFAULT_DB_PATH = "data/state.db"
 DEFAULT_MAX_NEWS_PER_RUN = 5
 
@@ -65,7 +64,9 @@ class Settings:
 
         max_news_env = os.environ.get("MAX_NEWS_PER_RUN")
         try:
-            max_news_per_run = int(max_news_env) if max_news_env else DEFAULT_MAX_NEWS_PER_RUN
+            max_news_per_run = (
+                int(max_news_env) if max_news_env else DEFAULT_MAX_NEWS_PER_RUN
+            )
         except ValueError as exc:
             raise ConfigError("MAX_NEWS_PER_RUN должен быть целым числом") from exc
 
