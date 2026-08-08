@@ -19,7 +19,8 @@ DB_PRUNE_KEEP_LAST = 1000
 
 def run(settings: Settings) -> None:
     storage = Storage(settings.db_path)
-    ai_writer = AIWriter(settings.groq_api_key, settings.groq_model)
+    # Используем новые атрибуты из Settings
+    ai_writer = AIWriter(settings.deepseek_api_key, settings.deepseek_model)
     telegram = TelegramClient(settings.bot_token, settings.channel_id)
 
     logger.info("Проверяю %s RSS-источник(ов)...", len(settings.rss_urls))
